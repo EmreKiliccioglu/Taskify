@@ -3,7 +3,6 @@ import 'package:taskify/user/register.dart';
 import '../core/error_handler.dart';
 import '../home/home_page.dart';
 import '../l10n/app_localizations.dart';
-import '../main.dart';
 import 'auth.dart';
 import 'login.dart';
 

@@ -74,7 +74,7 @@ class _UserPasswordPageState extends State<UserPasswordPage> {
             Padding(
               padding: const EdgeInsets.all(12.0),
               child: Image.asset(
-                "assets/images/app_icon.png",
+                "assets/taskifyIcon.png",
                 height: 130,
                 width: 130,
               ),

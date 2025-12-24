@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import '../home/home_page.dart';
+import '../home/auth_gate.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -10,17 +10,16 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
-
   @override
   void initState() {
     super.initState();
-    _navigateToHome();
+    _navigate();
   }
 
-  void _navigateToHome() async {
-    await Future.delayed(const Duration(seconds: 3)); // 3 saniye bekle
+  void _navigate() async {
+    await Future.delayed(const Duration(seconds: 3));
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (_) => const HomePage()),
+      MaterialPageRoute(builder: (_) => const AuthGate()),
     );
   }
 
@@ -33,8 +32,6 @@ class _SplashPageState extends State<SplashPage> {
           'assets/todo.json',
           width: 250,
           height: 250,
-          fit: BoxFit.contain,
-          repeat: true,
         ),
       ),
     );

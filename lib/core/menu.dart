@@ -6,6 +6,9 @@ import '../user/login_register_page.dart';
 
 class MenuPanel {
   static void open(BuildContext context) {
+    // 🔴 KRİTİK NOKTA: Future SADECE BİR KEZ OLUŞTURULUYOR
+    final Future<String?> userInfoFuture = Auth().getUserInfo();
+
     showGeneralDialog(
       context: context,
       barrierDismissible: true,
@@ -28,110 +31,123 @@ class MenuPanel {
                 children: [
                   const SizedBox(height: 60),
 
-                  // Kullanıcı adı ve ikon
-                  FutureBuilder<String?>(
-                    future: Auth().getUserInfo(), // Auth sınıfından çağırıyoruz
-                    builder: (context, snapshot) {
-                      String displayName;
+                  // ================= USER INFO =================
+                  StreamBuilder<User?>(
+                    stream: Auth().authStateChanges,
+                    builder: (context, authSnapshot) {
+                      final user = authSnapshot.data;
 
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        displayName = "Yükleniyor...";
-                      } else if (snapshot.hasData && snapshot.data != null && snapshot.data!.isNotEmpty) {
-                        displayName = snapshot.data!;
-                      } else {
-                        displayName = "Guest";
+                      if (user == null) {
+                        return const _UserHeader(displayName: "GUEST");
                       }
 
-                      return Column(
-                        children: [
-                          ClipOval(
-                            child: Image.asset(
-                              "assets/taskifyIcon.png",
-                              width: 80,
-                              height: 80,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          Text(
-                            displayName,
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                          ),
-                          const SizedBox(height: 30),
-                        ],
+                      return FutureBuilder<String?>(
+                        future: userInfoFuture, // ✅ CACHE’LENMİŞ FUTURE
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const _UserHeader(
+                                displayName: "YÜKLENİYOR...");
+                          }
+
+                          if (snapshot.hasData &&
+                              snapshot.data != null &&
+                              snapshot.data!.isNotEmpty) {
+                            return _UserHeader(
+                              displayName: snapshot.data!,
+                            );
+                          }
+
+                          // 🔹 Firestore gecikirse fallback
+                          final fallback =
+                              user.displayName ??
+                                  user.email?.split('@').first ??
+                                  "GUEST";
+
+                          return _UserHeader(
+                            displayName: fallback.toUpperCase(),
+                          );
+                        },
                       );
                     },
                   ),
 
-                  // Hesabım butonu
+                  // ================= ACCOUNT =================
                   ListTile(
-                    leading: Icon(Icons.person, color: Theme.of(context).colorScheme.primary),
+                    leading: Icon(
+                      Icons.person,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
                     title: Text(
                       "Hesabım",
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w500,
-                        color: Theme.of(context).colorScheme.onSurface,
+                        color:
+                        Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
-                    onTap: () {
-                      // Hesabım sayfasına yönlendirme
-                    },
+                    onTap: () {},
                   ),
 
-                  // Bildirimler butonu
+                  // ================= NOTIFICATIONS =================
                   ListTile(
-                    leading: Icon(Icons.notifications, color: Theme.of(context).colorScheme.primary),
+                    leading: Icon(
+                      Icons.notifications,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
                     title: Text(
                       "Bildirimler",
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w500,
-                        color: Theme.of(context).colorScheme.onSurface,
+                        color:
+                        Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
-                    onTap: () {
-                      // Bildirimler sayfasına yönlendirme
-                    },
+                    onTap: () {},
                   ),
 
-                  const Spacer(), // en alta buton için boşluk
+                  const Spacer(),
 
-                  // Giriş Yap / Çıkış Yap
+                  // ================= LOGIN / LOGOUT =================
                   StreamBuilder<User?>(
                     stream: FirebaseAuth.instance.authStateChanges(),
                     builder: (context, snapshot) {
                       final user = snapshot.data;
+
                       return ListTile(
                         leading: Icon(
-                          user == null ? Icons.login : Icons.logout,
-                          color: Theme.of(context).colorScheme.primary,
+                          user == null
+                              ? Icons.login
+                              : Icons.logout,
+                          color:
+                          Theme.of(context).colorScheme.primary,
                         ),
                         title: Text(
                           user == null ? "Giriş Yap" : "Çıkış Yap",
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w500,
-                            color: Theme.of(context).colorScheme.onSurface,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSurface,
                           ),
                         ),
-                          onTap: () async {
-                            Navigator.of(context).pop(); // Paneli kapat
-                            if (user == null) {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => const LoginRegisterPage(),
-                                ),
-                              );
-                            } else {
-                              await Auth().signOut(); // Giriş yapmışsa çıkış yap
-                            }
-                          }
+                        onTap: () async {
+                          Navigator.of(context).pop();
 
+                          if (user == null) {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) =>
+                                const LoginRegisterPage(),
+                              ),
+                            );
+                          } else {
+                            await Auth().signOut();
+                          }
+                        },
                       );
                     },
                   ),
@@ -143,7 +159,8 @@ class MenuPanel {
           ),
         );
       },
-      transitionBuilder: (context, animation1, animation2, child) {
+      transitionBuilder:
+          (context, animation1, animation2, child) {
         return SlideTransition(
           position: Tween<Offset>(
             begin: const Offset(-1, 0),
@@ -152,6 +169,39 @@ class MenuPanel {
           child: child,
         );
       },
+    );
+  }
+}
+
+// ================= USER HEADER =================
+class _UserHeader extends StatelessWidget {
+  final String displayName;
+
+  const _UserHeader({required this.displayName});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        ClipOval(
+          child: Image.asset(
+            "assets/taskifyIcon.png",
+            width: 80,
+            height: 80,
+            fit: BoxFit.cover,
+          ),
+        ),
+        const SizedBox(height: 10),
+        Text(
+          displayName,
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Theme.of(context).colorScheme.primary,
+          ),
+        ),
+        const SizedBox(height: 30),
+      ],
     );
   }
 }

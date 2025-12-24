@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:taskify/task/add_task.dart';
 import '../core/menu.dart';
+import '../task/task_list.dart';
+import '../task/task_service.dart';
+import '../user/auth.dart';
 import 'settings.dart';
-import '../l10n/app_localizations.dart';
 import '../core/global.dart';
 
 class HomePage extends StatefulWidget {
@@ -12,49 +16,58 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
-  late TabController _tabController;
+class _HomePageState extends State<HomePage> {
+  late TaskService _taskService;
+  late final ScrollController _calendarController;
+
   bool _isDarkTheme = false;
+  DateTime _selectedDate = DateTime.now();
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _taskService = TaskService(Auth());
+    _calendarController = ScrollController();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      const itemWidth = 76; // kart genişliği + spacing
+      _calendarController.jumpTo(itemWidth * 7);
+    });
+
     _loadTheme();
   }
 
   Future<void> _loadTheme() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool savedTheme = prefs.getBool('darkTheme') ?? false;
+    final prefs = await SharedPreferences.getInstance();
+    final savedTheme = prefs.getBool('darkTheme') ?? false;
+
     setState(() => _isDarkTheme = savedTheme);
     isDarkTheme.value = savedTheme;
   }
 
-  Future<void> _updateTheme(bool value) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() => _isDarkTheme = value);
-    isDarkTheme.value = value;
-    await prefs.setBool('darkTheme', value);
+  bool _isSameDay(DateTime a, DateTime b) {
+    return a.year == b.year && a.month == b.month && a.day == b.day;
   }
 
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
+  List<DateTime> _generateDays() {
+    final today = DateTime.now();
+    return List.generate(
+      15,
+          (i) => DateTime(today.year, today.month, today.day + (i - 7)),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final tabLabelColor = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
+    final days = _generateDays();
+    final today = DateTime.now();
 
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.menu),
-          onPressed: () {
-            MenuPanel.open(context);
-          },
+          onPressed: () => MenuPanel.open(context),
         ),
         title: const Text('Taskify'),
         actions: [
@@ -70,54 +83,123 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
             },
           ),
         ],
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(64),
-          child: Material(
-            color: Colors.transparent,
-            child: Container(
-              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              height: 48,
-              decoration: BoxDecoration(
-                color: theme.cardColor.withOpacity(0.4),
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: TabBar(
-                controller: _tabController,
-                indicator: BoxDecoration(
-                  color: theme.colorScheme.surface,
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                indicatorColor: Colors.transparent,
-                indicatorSize: TabBarIndicatorSize.tab,
-                dividerColor: Colors.transparent,
-                indicatorPadding: EdgeInsets.zero,
-                labelColor: tabLabelColor,
-                unselectedLabelColor:
-                theme.textTheme.bodyMedium?.color?.withOpacity(0.6),
-                labelStyle: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
-                ),
-                tabs: [
-                  Tab(text: AppLocalizations.of(context)!.all),
-                  Tab(text: AppLocalizations.of(context)!.active),
-                  Tab(text: AppLocalizations.of(context)!.completed),
-                ],
-              ),
+      ),
+
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // TAKVİM BAR
+          SizedBox(
+            height: 110,
+            child: ListView.separated(
+              controller: _calendarController,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+              scrollDirection: Axis.horizontal,
+              itemCount: days.length,
+              separatorBuilder: (_, __) => const SizedBox(width: 12),
+              itemBuilder: (context, index) {
+                final day = days[index];
+                final isSelected = _isSameDay(day, _selectedDate);
+                final isToday = _isSameDay(day, today);
+                return GestureDetector(
+                  onTap: () {
+                    setState(() => _selectedDate = day);
+                  },
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 220),
+                    curve: Curves.easeOutCubic,
+                    width: 64,
+                    decoration: BoxDecoration(
+                      color: isSelected
+                          ? theme.colorScheme.primary
+                          : theme.cardColor,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: theme.colorScheme.primary.withOpacity(0.2),
+                      ),
+                      boxShadow: isSelected
+                          ? [
+                        BoxShadow(
+                          color: theme.colorScheme.primary
+                              .withOpacity(0.35),
+                          blurRadius: 8,
+                          offset: const Offset(0, 4),
+                        ),
+                      ]
+                          : [],
+                    ),
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              day.day.toString(),
+                              style: TextStyle(
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                                color: isSelected
+                                    ? Colors.white
+                                    : theme.textTheme.bodyLarge?.color,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              _isSameDay(day, today)
+                                  ? 'Bugün'
+                                  : DateFormat('MMMM', 'tr_TR').format(day),
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: isSelected
+                                    ? Colors.white70
+                                    : theme.textTheme.bodySmall?.color,
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        // TODAY INDICATOR
+                        if (isToday && !isSelected)
+                          Positioned(
+                            bottom: 8,
+                            child: Container(
+                              width: 6,
+                              height: 6,
+                              decoration: BoxDecoration(
+                                color: theme.colorScheme.primary,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                );
+              },
             ),
           ),
-        ),
-      ),
-      body: TabBarView(
-        controller: _tabController,
-        children: const [
-          Center(child: Text('All tasks')),
-          Center(child: Text('Active tasks')),
-          Center(child: Text('Completed tasks')),
+
+          const Divider(height: 1),
+
+          // SEÇİLEN GÜNÜN TASKLARI
+          Expanded(
+            child: TaskListPage(
+              taskStream: _taskService.getTasksByDate(_selectedDate),
+            ),
+          ),
         ],
       ),
+
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => const AddTaskPage(),
+            ),
+          );
+        },
         child: const Icon(Icons.add),
       ),
     );

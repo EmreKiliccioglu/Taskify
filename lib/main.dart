@@ -1,13 +1,12 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:intl/date_symbol_data_file.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:taskify/core/splash.dart';
-
 import 'core/app_theme.dart';
 import 'core/global.dart';
-import 'firebase_options.dart';
-import 'home/home_page.dart';
+import 'core/firebase_options.dart';
 import 'l10n/app_localizations.dart';
 
 
@@ -18,15 +17,14 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  bool savedTheme = prefs.getBool('darkTheme') ?? false;
-  isDarkTheme.value = savedTheme;
+  final prefs = await SharedPreferences.getInstance();
 
-  String? savedLanguageCode = prefs.getString('appLanguage');
+  isDarkTheme.value = prefs.getBool('darkTheme') ?? false;
+
+  final savedLanguageCode = prefs.getString('appLanguage');
   if (savedLanguageCode != null) {
     appLocale.value = Locale(savedLanguageCode);
   }
-
   runApp(const MyApp());
 }
 
@@ -34,7 +32,7 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) { //uygulama içi anlık dil ve tema değişimi
+  Widget build(BuildContext context) {
     return ValueListenableBuilder<Locale>(
       valueListenable: appLocale,
       builder: (context, locale, child) {
