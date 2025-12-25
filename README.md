@@ -1,16 +1,34 @@
-# taskify
+# 📝 Taskify
 
-A new Flutter project.
+Taskify is a modern task management mobile application built with **Flutter** and **Firebase**.  
+It allows users to create daily tasks, schedule reminders, and receive local notifications at the right time.
 
-## Getting Started
+---
 
-This project is a starting point for a Flutter application.
+## 🚀 Features
 
-A few resources to get you started if this is your first Flutter project:
+- 🔐 **Firebase Authentication**
+  - Email & password login system
+- 📅 **Daily Task Management**
+  - Create, view, update, and delete tasks
+  - Tasks are filtered by selected date
+- ⏰ **Task Reminders**
+  - Set reminders:
+    - At time
+    - 5 minutes before
+    - 15 minutes before
+    - 30 minutes before
+    - 1 hour before
+  - Scheduled local notifications using device timezone
+- 🎤 **Voice Input Support**
+  - Convert spoken Turkish sentences into task data
+- 🌙 **Light / Dark Theme**
+  - User preference saved with SharedPreferences
+- 🌍 **Localization**
+  - Turkish 🇹🇷 and English 🇬🇧 support
+- 🎨 **Modern UI**
+  - Slidable task cards
+  - Horizontal calendar selector
+  - Clean and minimal design
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+---
