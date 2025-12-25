@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 class Task {
   final String id;
@@ -7,6 +8,7 @@ class Task {
   final String description;
   final DateTime dueDate;
   final bool isCompleted;
+  final int reminderMinutes;
 
   Task({
     required this.id,
@@ -15,38 +17,24 @@ class Task {
     required this.description,
     required this.dueDate,
     required this.isCompleted,
+    required this.reminderMinutes,
   });
-
-  Task copyWith({
-    String? id,
-    String? userId,
-    String? title,
-    String? description,
-    DateTime? dueDate,
-    String? priority,
-    int? reminderMinutes,
-    bool? isCompleted,
-  }) {
-    return Task(
-      id: id ?? this.id,
-      userId: userId ?? this.userId,
-      title: title ?? this.title,
-      description: description ?? this.description,
-      dueDate: dueDate ?? this.dueDate,
-      isCompleted: isCompleted ?? this.isCompleted,
-    );
-  }
 
   factory Task.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
+    final timestamp = data['dueDate'] as Timestamp;
+
+    // Firestore UTC -> TZDateTime Europe/Istanbul
+    final tzDueDate = tz.TZDateTime.from(timestamp.toDate(), tz.getLocation('Europe/Istanbul'));
 
     return Task(
       id: doc.id,
-      userId: data['userId'],
+      userId: data['userId'] ?? '',
       title: data['title'] ?? '',
       description: data['description'] ?? '',
-      dueDate: (data['dueDate'] as Timestamp).toDate(),
+      dueDate: tzDueDate,
       isCompleted: data['isCompleted'] ?? false,
+      reminderMinutes: data['reminderMinutes'] ?? 0,
     );
   }
 
@@ -55,8 +43,9 @@ class Task {
       'userId': userId,
       'title': title,
       'description': description,
-      'dueDate': Timestamp.fromDate(dueDate),
+      'dueDate': dueDate.toUtc(), // Firestore UTC bekliyor
       'isCompleted': isCompleted,
+      'reminderMinutes': reminderMinutes,
     };
   }
 }

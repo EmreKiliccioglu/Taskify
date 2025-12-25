@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../home/auth_gate.dart';
 
 class SplashPage extends StatefulWidget {
@@ -13,11 +14,22 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();
-    _navigate();
+    _initializeApp();
   }
 
-  void _navigate() async {
+  Future<void> _initializeApp() async {
+    // Splash animasyonu
     await Future.delayed(const Duration(seconds: 3));
+
+    // Alarm izni
+    if (await Permission.notification.isDenied) {
+      await Permission.notification.request();
+    }
+    if (await Permission.scheduleExactAlarm.isDenied) {
+      await Permission.scheduleExactAlarm.request();
+    }
+
+    // Kullanıcı giriş durumu kontrolü
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(builder: (_) => const AuthGate()),
     );

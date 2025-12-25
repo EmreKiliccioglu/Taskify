@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:taskify/task/speech_parser.dart';
 import 'package:taskify/task/task_model.dart';
 import 'package:taskify/task/task_service.dart';
+import 'package:timezone/timezone.dart' as tz;
 import '../user/auth.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
+import 'notification_service.dart';
 
 class AddTaskPage extends StatefulWidget {
   const AddTaskPage({super.key});
@@ -21,6 +23,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
   String _spokenText = '';
   DateTime? _date;
   TimeOfDay? _time;
+  int _reminderMinutes = 0;
 
   @override
   void initState() {
@@ -46,7 +49,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
     if (t != null) setState(() => _time = t);
   }
 
-  void _mockSpeechInput() {
+  /*void _mockSpeechInput() {
     const mockText =
         "bugün öğleden sonra kritik bir iş var"
     ;
@@ -67,9 +70,9 @@ class _AddTaskPageState extends State<AddTaskPage> {
         duration: Duration(seconds: 2),
       ),
     );
-  }
+  }*/
 
-  /*Future<void> _toggleListening() async {
+  Future<void> _toggleListening() async {
     if (!_isListening) {
       final available = await _speech.initialize(
         onStatus: (status) {
@@ -115,8 +118,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
       setState(() => _isListening = false);
       await _speech.stop();
     }
-  }*/
-
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -145,7 +147,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                         child: TextField(
                           controller: _titleController,
                           decoration: const InputDecoration(
-                            hintText: 'e.g. Finish Flutter project',
+                            hintText: 'Başlık Giriniz',
                             prefixIcon: Icon(Icons.edit),
                             border: OutlineInputBorder(
                               borderRadius:
@@ -167,7 +169,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                                 controller: _descController,
                                 maxLines: 3,
                                 decoration: const InputDecoration(
-                                  hintText: 'Optional description',
+                                  hintText: 'Görev İçeriğini Yazınız',
                                   prefixIcon: Icon(Icons.notes),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.all(Radius.circular(16)),
@@ -185,8 +187,8 @@ class _AddTaskPageState extends State<AddTaskPage> {
                                 _isListening ? Icons.mic : Icons.mic_none,
                                 color: _isListening ? Colors.red : Colors.grey,
                               ),
-                              //onPressed: _toggleListening,
-                              onPressed: _mockSpeechInput,
+                              onPressed: _toggleListening,
+                              //onPressed: _mockSpeechInput,
                             ),
                           ],
                         ),
@@ -211,6 +213,41 @@ class _AddTaskPageState extends State<AddTaskPage> {
                                   ? 'Select time'
                                   : _time!.format(context),
                               onTap: _pickTime,
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      // REMINDER SELECTION
+                      _Section(
+                        title: 'Reminder',
+                        child: Wrap(
+                          spacing: 8,
+                          children: [
+                            _ReminderButton(
+                              label: 'At time',
+                              selected: _reminderMinutes == 0,
+                              onTap: () => setState(() => _reminderMinutes = 0),
+                            ),
+                            _ReminderButton(
+                              label: '5 min before',
+                              selected: _reminderMinutes == 5,
+                              onTap: () => setState(() => _reminderMinutes = 5),
+                            ),
+                            _ReminderButton(
+                              label: '15 min before',
+                              selected: _reminderMinutes == 15,
+                              onTap: () => setState(() => _reminderMinutes = 15),
+                            ),
+                            _ReminderButton(
+                              label: '30 min before',
+                              selected: _reminderMinutes == 30,
+                              onTap: () => setState(() => _reminderMinutes = 30),
+                            ),
+                            _ReminderButton(
+                              label: '1 hour before',
+                              selected: _reminderMinutes == 60,
+                              onTap: () => setState(() => _reminderMinutes = 60),
                             ),
                           ],
                         ),
@@ -251,7 +288,8 @@ class _AddTaskPageState extends State<AddTaskPage> {
                                 return;
                               }
 
-                              final dueDate = DateTime(
+                              final dueDate = tz.TZDateTime(
+                                tz.local, // tz.local = Europe/Istanbul
                                 _date!.year,
                                 _date!.month,
                                 _date!.day,
@@ -266,9 +304,22 @@ class _AddTaskPageState extends State<AddTaskPage> {
                                 description: _descController.text.trim(),
                                 dueDate: dueDate,
                                 isCompleted: false,
+                                reminderMinutes: _reminderMinutes,
                               );
 
                               await TaskService(Auth()).createTask(task);
+                              final tzScheduledTime = dueDate.subtract(Duration(minutes: _reminderMinutes));
+
+                              print("TZ Scheduled notification: $tzScheduledTime");
+                              print("Current time: ${DateTime.now()}");
+
+                              await NotificationService.scheduleTaskNotification(
+                                id: DateTime.now().millisecondsSinceEpoch ~/ 1000, // unique id
+                                title: 'Task Reminder',
+                                body: task.title,
+                                scheduledTime: tzScheduledTime, // burada tzScheduledTime kullan
+                              );
+
                               Navigator.pop(context);
                             },
                             icon: const Icon(Icons.check_circle_outline),

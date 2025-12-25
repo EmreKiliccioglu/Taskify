@@ -9,6 +9,7 @@ class TaskListPage extends StatelessWidget {
   final Stream<List<Task>> taskStream;
   final _taskService = TaskService(Auth());
 
+
   TaskListPage({
     super.key,
     required this.taskStream,
@@ -29,7 +30,7 @@ class TaskListPage extends StatelessWidget {
         final tasks = snapshot.data ?? [];
 
         if (tasks.isEmpty) {
-          return const Center(child: Text('No tasks found'));
+          return const Center(child: Text('Bugün için bir görev eklenmedi!'));
         }
 
         return ListView.separated(
@@ -109,12 +110,17 @@ class TaskListPage extends StatelessWidget {
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                DateFormat('HH:mm').format(task.dueDate),
-                                style: TextStyle(
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.bold,
-                                  color: theme.colorScheme.primary,
+                              SizedBox(
+                                width: 70,
+                                child: Center(
+                                  child: Text(
+                                    DateFormat('HH:mm').format(task.dueDate.toLocal()),
+                                    style: TextStyle(
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.bold,
+                                      color: theme.colorScheme.primary,
+                                    ),
+                                  ),
                                 ),
                               ),
 
@@ -143,10 +149,26 @@ class TaskListPage extends StatelessWidget {
 
                                     const SizedBox(height: 6),
 
-                                    Text(
-                                      DateFormat('dd MMM yyyy')
-                                          .format(task.dueDate),
-                                      style: theme.textTheme.bodySmall,
+                                    Row(
+                                      children: [
+                                        Text(
+                                          DateFormat('dd MMM yyyy').format(task.dueDate.toLocal()),
+                                          style: theme.textTheme.bodySmall,
+                                        ),
+                                        const SizedBox(width: 12),
+                                        Icon(
+                                          Icons.notifications_active_outlined,
+                                          size: 14,
+                                          color: theme.colorScheme.primary,
+                                        ),
+                                        const SizedBox(width: 4),
+                                        Text(
+                                          task.reminderMinutes == 0
+                                              ? 'At time'
+                                              : '${task.reminderMinutes} dk önce',
+                                          style: theme.textTheme.bodySmall,
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),

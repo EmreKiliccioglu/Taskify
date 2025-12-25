@@ -45,7 +45,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get register => 'Register';
 
   @override
-  String get email => 'E-posta';
+  String get email => 'E-mail';
 
   @override
   String get forgotPassword => 'Forgot password?';
@@ -110,7 +110,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get key => 'Key';
 
   @override
-  String get error => 'Hata';
+  String get error => 'Error';
 
   @override
   String get error_general => 'An error occurred. Please try again.';
