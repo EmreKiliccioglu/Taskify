@@ -20,8 +20,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late TaskService _taskService;
   late final ScrollController _calendarController;
-
-  bool _isDarkTheme = false;
   DateTime _selectedDate = DateTime.now();
 
   @override
@@ -42,7 +40,6 @@ class _HomePageState extends State<HomePage> {
     final prefs = await SharedPreferences.getInstance();
     final savedTheme = prefs.getBool('darkTheme') ?? false;
 
-    setState(() => _isDarkTheme = savedTheme);
     isDarkTheme.value = savedTheme;
   }
 
@@ -89,6 +86,7 @@ class _HomePageState extends State<HomePage> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+
           // TAKVİM BAR
           SizedBox(
             height: 110,
@@ -97,7 +95,7 @@ class _HomePageState extends State<HomePage> {
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
               scrollDirection: Axis.horizontal,
               itemCount: days.length,
-              separatorBuilder: (_, __) => const SizedBox(width: 12),
+              separatorBuilder: (_, _) => const SizedBox(width: 12),
               itemBuilder: (context, index) {
                 final day = days[index];
                 final isSelected = _isSameDay(day, _selectedDate);
@@ -116,13 +114,13 @@ class _HomePageState extends State<HomePage> {
                           : theme.cardColor,
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(
-                        color: theme.colorScheme.primary.withOpacity(0.2),
+                        color: theme.colorScheme.primary.withValues(alpha: 0.2),
                       ),
                       boxShadow: isSelected
                           ? [
                         BoxShadow(
                           color: theme.colorScheme.primary
-                              .withOpacity(0.35),
+                              .withValues(alpha: 0.35),
                           blurRadius: 8,
                           offset: const Offset(0, 4),
                         ),

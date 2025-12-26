@@ -34,7 +34,6 @@ class _UserSettingsPageState extends State<UserSettingsPage>{
     await prefs.setBool('darkTheme', value);
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

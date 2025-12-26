@@ -50,29 +50,6 @@ class _AddTaskPageState extends State<AddTaskPage> {
     if (t != null) setState(() => _time = t);
   }
 
-  /*void _mockSpeechInput() {
-    const mockText =
-        "bugün öğleden sonra kritik bir iş var"
-    ;
-
-    final parsed = parseSpokenTask(mockText);
-
-    setState(() {
-      _spokenText = mockText;
-      _descController.text = parsed.description;
-      _titleController.text = parsed.title;
-      _date = parsed.date;
-      _time = parsed.time;
-    });
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Mock ses analizi çalıştı'),
-        duration: Duration(seconds: 2),
-      ),
-    );
-  }*/
-
   Future<void> _toggleListening() async {
     if (!_isListening) {
       final available = await _speech.initialize(
@@ -164,7 +141,6 @@ class _AddTaskPageState extends State<AddTaskPage> {
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // Description field
                             Expanded(
                               child: TextField(
                                 controller: _descController,
@@ -181,7 +157,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
 
                             const SizedBox(width: 8),
 
-                            // Mic button
+                            // Mikrofon
                             IconButton(
                               iconSize: 28,
                               icon: Icon(
@@ -189,13 +165,12 @@ class _AddTaskPageState extends State<AddTaskPage> {
                                 color: _isListening ? Colors.red : Colors.grey,
                               ),
                               onPressed: _toggleListening,
-                              //onPressed: _mockSpeechInput,
                             ),
                           ],
                         ),
                       ),
 
-                      // DATE & TIME
+                      // DATE/TIME
                       _Section(
                         title: AppLocalizations.of(context)!.schedule,
                         child: Row(
@@ -262,7 +237,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
                           border: Border.all(
-                            color: Theme.of(context).colorScheme.primary.withOpacity(0.6),
+                            color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.6),
                             width: 1.5,
                           ),
                         ),
@@ -290,7 +265,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                               }
 
                               final dueDate = tz.TZDateTime(
-                                tz.local, // tz.local = Europe/Istanbul
+                                tz.local,
                                 _date!.year,
                                 _date!.month,
                                 _date!.day,
@@ -311,8 +286,8 @@ class _AddTaskPageState extends State<AddTaskPage> {
                               await TaskService(Auth()).createTask(task);
                               final tzScheduledTime = dueDate.subtract(Duration(minutes: _reminderMinutes));
 
-                              print("TZ Scheduled notification: $tzScheduledTime");
-                              print("Current time: ${DateTime.now()}");
+                              debugPrint("TZ Scheduled notification: $tzScheduledTime");
+                              debugPrint("Current time: ${DateTime.now()}");
 
                               await NotificationService.scheduleTaskNotification(
                                 id: DateTime.now().millisecondsSinceEpoch ~/ 1000, // unique id
@@ -433,7 +408,7 @@ class _PriorityButton extends StatelessWidget {
           margin: const EdgeInsets.only(right: 8),
           padding: const EdgeInsets.symmetric(vertical: 14),
           decoration: BoxDecoration(
-            color: selected ? color.withOpacity(0.15) : Colors.transparent,
+            color: selected ? color.withValues(alpha: 0.15) : Colors.transparent,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(color: color),
           ),
@@ -472,7 +447,7 @@ class _ReminderButton extends StatelessWidget {
       label: Text(label),
       selected: selected,
       onSelected: (_) => onTap(),
-      selectedColor: theme.colorScheme.primary.withOpacity(0.15),
+      selectedColor: theme.colorScheme.primary.withValues(alpha: 0.15),
       labelStyle: TextStyle(
         fontWeight: FontWeight.w600,
         color: selected

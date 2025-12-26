@@ -19,7 +19,6 @@ class TaskListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final locale = appLocale.value.languageCode;
     return StreamBuilder<List<Task>>(
       stream: taskStream,
       builder: (context, snapshot) {
@@ -39,7 +38,7 @@ class TaskListPage extends StatelessWidget {
         return ListView.separated(
           padding: const EdgeInsets.all(16),
           itemCount: tasks.length,
-          separatorBuilder: (_, __) => const SizedBox(height: 12),
+          separatorBuilder: (_, _) => const SizedBox(height: 12),
           itemBuilder: (context, index) {
             final task = tasks[index];
             final theme = Theme.of(context);
@@ -87,7 +86,7 @@ class TaskListPage extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
-                    color: theme.colorScheme.primary.withOpacity(0.25),
+                    color: theme.colorScheme.primary.withValues(alpha: 0.1),
                     width: 1,
                   ),
                   color: theme.cardColor,

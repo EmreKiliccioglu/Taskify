@@ -31,7 +31,7 @@ class AppTheme {
     switchTheme: SwitchThemeData(
       trackColor: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.selected)) {
-          return const Color(0xFF44848B).withOpacity(0.5);
+          return const Color(0xFF44848B).withValues(alpha: 0.5);
         }
         return Colors.grey.shade300;
       }),
@@ -75,7 +75,7 @@ class AppTheme {
     switchTheme: SwitchThemeData(
       trackColor: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.selected)) {
-          return const Color(0xFF44848B).withOpacity(0.6);
+          return const Color(0xFF44848B).withValues(alpha: 0.6);
         }
         return Colors.grey.shade300;
       }),

@@ -7,7 +7,6 @@ import '../user/login_register_page.dart';
 
 class MenuPanel {
   static void open(BuildContext context) {
-    // 🔴 KRİTİK NOKTA: Future SADECE BİR KEZ OLUŞTURULUYOR
     final Future<String?> userInfoFuture = Auth().getUserInfo();
 
     showGeneralDialog(
@@ -58,7 +57,6 @@ class MenuPanel {
                             );
                           }
 
-                          // 🔹 Firestore gecikirse fallback
                           final fallback =
                               user.displayName ??
                                   user.email?.split('@').first ??
@@ -72,7 +70,7 @@ class MenuPanel {
                     },
                   ),
 
-                  // ================= ACCOUNT =================
+                  // ACCOUNTS
                   ListTile(
                     leading: Icon(
                       Icons.person,
@@ -90,7 +88,7 @@ class MenuPanel {
                     onTap: () {},
                   ),
 
-                  // ================= NOTIFICATIONS =================
+                  // NOTIFICATIONS
                   ListTile(
                     leading: Icon(
                       Icons.notifications,
@@ -110,7 +108,7 @@ class MenuPanel {
 
                   const Spacer(),
 
-                  // ================= LOGIN / LOGOUT =================
+                  // LOGIN/LOGOUT
                   StreamBuilder<User?>(
                     stream: FirebaseAuth.instance.authStateChanges(),
                     builder: (context, snapshot) {
@@ -173,7 +171,7 @@ class MenuPanel {
   }
 }
 
-// ================= USER HEADER =================
+// KULLANICI BAŞLIĞI
 class _UserHeader extends StatelessWidget {
   final String displayName;
 
