@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:taskify/task/add_task.dart';
 import '../core/menu.dart';
+import '../l10n/app_localizations.dart';
 import '../task/task_list.dart';
 import '../task/task_service.dart';
 import '../user/auth.dart';
@@ -30,7 +31,7 @@ class _HomePageState extends State<HomePage> {
     _calendarController = ScrollController();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      const itemWidth = 76; // kart genişliği + spacing
+      const itemWidth = 76;
       _calendarController.jumpTo(itemWidth * 7);
     });
 
@@ -147,8 +148,8 @@ class _HomePageState extends State<HomePage> {
                             const SizedBox(height: 4),
                             Text(
                               _isSameDay(day, today)
-                                  ? 'Bugün'
-                                  : DateFormat('MMMM', 'tr_TR').format(day),
+                                  ? AppLocalizations.of(context)!.today
+                                  : DateFormat('MMMM',appLocale.value.languageCode).format(day),
                               style: TextStyle(
                                 fontSize: 12,
                                 color: isSelected

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../l10n/app_localizations.dart';
 import '../user/auth.dart';
 import '../user/login_register_page.dart';
 
@@ -31,7 +32,6 @@ class MenuPanel {
                 children: [
                   const SizedBox(height: 60),
 
-                  // ================= USER INFO =================
                   StreamBuilder<User?>(
                     stream: Auth().authStateChanges,
                     builder: (context, authSnapshot) {
@@ -42,7 +42,7 @@ class MenuPanel {
                       }
 
                       return FutureBuilder<String?>(
-                        future: userInfoFuture, // ✅ CACHE’LENMİŞ FUTURE
+                        future: userInfoFuture,
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
@@ -79,7 +79,7 @@ class MenuPanel {
                       color: Theme.of(context).colorScheme.primary,
                     ),
                     title: Text(
-                      "Hesabım",
+                      AppLocalizations.of(context)!.account,
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w500,
@@ -97,7 +97,7 @@ class MenuPanel {
                       color: Theme.of(context).colorScheme.primary,
                     ),
                     title: Text(
-                      "Bildirimler",
+                      AppLocalizations.of(context)!.notifications,
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w500,
@@ -125,7 +125,7 @@ class MenuPanel {
                           Theme.of(context).colorScheme.primary,
                         ),
                         title: Text(
-                          user == null ? "Giriş Yap" : "Çıkış Yap",
+                          user == null ? AppLocalizations.of(context)!.login : AppLocalizations.of(context)!.logout,
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w500,

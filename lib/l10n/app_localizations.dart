@@ -281,7 +281,7 @@ abstract class AppLocalizations {
   /// No description provided for @logout.
   ///
   /// In tr, this message translates to:
-  /// **'Logout'**
+  /// **'Çıkış Yap'**
   String get logout;
 
   /// No description provided for @loggedOut.
@@ -331,6 +331,192 @@ abstract class AppLocalizations {
   /// In tr, this message translates to:
   /// **'Kayıt başarılı!'**
   String get registerSuccess;
+
+  /// No description provided for @noTaskForToday.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bugün için bir görev eklenmedi'**
+  String get noTaskForToday;
+
+  /// No description provided for @cancel.
+  ///
+  /// In tr, this message translates to:
+  /// **'İptal'**
+  String get cancel;
+
+  /// No description provided for @confirm.
+  ///
+  /// In tr, this message translates to:
+  /// **'Evet'**
+  String get confirm;
+
+  /// No description provided for @delete.
+  ///
+  /// In tr, this message translates to:
+  /// **'Sil'**
+  String get delete;
+
+  /// No description provided for @taskCompletedQuestion.
+  ///
+  /// In tr, this message translates to:
+  /// **'Görev tamamlandı mı?'**
+  String get taskCompletedQuestion;
+
+  /// No description provided for @reactivateTaskQuestion.
+  ///
+  /// In tr, this message translates to:
+  /// **'Görev tekrar aktif olsun mu?'**
+  String get reactivateTaskQuestion;
+
+  /// No description provided for @markTaskCompletedConfirmation.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bu görevi tamamlandı olarak işaretlemek istiyor musunuz?'**
+  String get markTaskCompletedConfirmation;
+
+  /// No description provided for @reactivateTaskConfirmation.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bu görevi tekrar aktif hale getirmek istiyor musunuz?'**
+  String get reactivateTaskConfirmation;
+
+  /// No description provided for @deleteTaskQuestion.
+  ///
+  /// In tr, this message translates to:
+  /// **'Görev silinsin mi?'**
+  String get deleteTaskQuestion;
+
+  /// No description provided for @deleteTaskConfirmation.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bu görevi kalıcı olarak silmek istiyor musunuz?'**
+  String get deleteTaskConfirmation;
+
+  /// No description provided for @reminderAtTime.
+  ///
+  /// In tr, this message translates to:
+  /// **'Zamanında'**
+  String get reminderAtTime;
+
+  /// No description provided for @reminderMinutesBefore.
+  ///
+  /// In tr, this message translates to:
+  /// **'{minutes} dk önce'**
+  String reminderMinutesBefore(Object minutes);
+
+  /// No description provided for @createTask.
+  ///
+  /// In tr, this message translates to:
+  /// **'Görev Oluştur'**
+  String get createTask;
+
+  /// No description provided for @selectDate.
+  ///
+  /// In tr, this message translates to:
+  /// **'Tarih Seç'**
+  String get selectDate;
+
+  /// No description provided for @selectTime.
+  ///
+  /// In tr, this message translates to:
+  /// **'Saat Seç'**
+  String get selectTime;
+
+  /// No description provided for @voiceAnalysisCompleted.
+  ///
+  /// In tr, this message translates to:
+  /// **'Ses analizi tamamlandı'**
+  String get voiceAnalysisCompleted;
+
+  /// No description provided for @taskName.
+  ///
+  /// In tr, this message translates to:
+  /// **'Görev Adı'**
+  String get taskName;
+
+  /// No description provided for @enterTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Başlık Giriniz'**
+  String get enterTitle;
+
+  /// No description provided for @details.
+  ///
+  /// In tr, this message translates to:
+  /// **'Detaylar'**
+  String get details;
+
+  /// No description provided for @enterTaskDetails.
+  ///
+  /// In tr, this message translates to:
+  /// **'Görev İçeriğini Yazınız'**
+  String get enterTaskDetails;
+
+  /// No description provided for @schedule.
+  ///
+  /// In tr, this message translates to:
+  /// **'Zamanlama'**
+  String get schedule;
+
+  /// No description provided for @reminder.
+  ///
+  /// In tr, this message translates to:
+  /// **'Hatırlatıcı'**
+  String get reminder;
+
+  /// No description provided for @reminder5MinBefore.
+  ///
+  /// In tr, this message translates to:
+  /// **'5 dk önce'**
+  String get reminder5MinBefore;
+
+  /// No description provided for @reminder15MinBefore.
+  ///
+  /// In tr, this message translates to:
+  /// **'15 dk önce'**
+  String get reminder15MinBefore;
+
+  /// No description provided for @reminder30MinBefore.
+  ///
+  /// In tr, this message translates to:
+  /// **'30 dk önce'**
+  String get reminder30MinBefore;
+
+  /// No description provided for @reminder1HourBefore.
+  ///
+  /// In tr, this message translates to:
+  /// **'1 saat önce'**
+  String get reminder1HourBefore;
+
+  /// No description provided for @fillRequiredFields.
+  ///
+  /// In tr, this message translates to:
+  /// **'Lütfen gerekli alanları doldurun'**
+  String get fillRequiredFields;
+
+  /// No description provided for @userNotAuthenticated.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kullanıcı doğrulanamadı'**
+  String get userNotAuthenticated;
+
+  /// No description provided for @notifications.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bildirimler'**
+  String get notifications;
+
+  /// No description provided for @account.
+  ///
+  /// In tr, this message translates to:
+  /// **'Hesabım'**
+  String get account;
+
+  /// No description provided for @today.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bugün'**
+  String get today;
 }
 
 class _AppLocalizationsDelegate

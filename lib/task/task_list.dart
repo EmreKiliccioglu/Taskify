@@ -3,6 +3,8 @@ import 'package:intl/intl.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:taskify/task/task_model.dart';
 import 'package:taskify/task/task_service.dart';
+import '../core/global.dart';
+import '../l10n/app_localizations.dart';
 import '../user/auth.dart';
 
 class TaskListPage extends StatelessWidget {
@@ -17,6 +19,7 @@ class TaskListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final locale = appLocale.value.languageCode;
     return StreamBuilder<List<Task>>(
       stream: taskStream,
       builder: (context, snapshot) {
@@ -30,7 +33,7 @@ class TaskListPage extends StatelessWidget {
         final tasks = snapshot.data ?? [];
 
         if (tasks.isEmpty) {
-          return const Center(child: Text('Bugün için bir görev eklenmedi!'));
+          return Center(child: Text(AppLocalizations.of(context)!.noTaskForToday));
         }
 
         return ListView.separated(
@@ -58,7 +61,7 @@ class TaskListPage extends StatelessWidget {
                     child: Center(
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
-                        children: const [
+                        children: [
                           Icon(
                             Icons.delete,
                             size: 32,
@@ -66,7 +69,7 @@ class TaskListPage extends StatelessWidget {
                           ),
                           SizedBox(height: 4),
                           Text(
-                            'Sil',
+                            AppLocalizations.of(context)!.delete,
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 12,
@@ -114,7 +117,7 @@ class TaskListPage extends StatelessWidget {
                                 width: 70,
                                 child: Center(
                                   child: Text(
-                                    DateFormat('HH:mm').format(task.dueDate.toLocal()),
+                                    DateFormat('HH:mm',appLocale.value.languageCode).format(task.dueDate.toLocal()),
                                     style: TextStyle(
                                       fontSize: 22,
                                       fontWeight: FontWeight.bold,
@@ -152,7 +155,7 @@ class TaskListPage extends StatelessWidget {
                                     Row(
                                       children: [
                                         Text(
-                                          DateFormat('dd MMM yyyy').format(task.dueDate.toLocal()),
+                                          DateFormat('dd MMM yyyy',appLocale.value.languageCode).format(task.dueDate.toLocal()),
                                           style: theme.textTheme.bodySmall,
                                         ),
                                         const SizedBox(width: 12),
@@ -164,8 +167,10 @@ class TaskListPage extends StatelessWidget {
                                         const SizedBox(width: 4),
                                         Text(
                                           task.reminderMinutes == 0
-                                              ? 'At time'
-                                              : '${task.reminderMinutes} dk önce',
+                                              ? AppLocalizations.of(context)!.reminderAtTime
+                                              : AppLocalizations.of(context)!.reminderMinutesBefore(
+                                            task.reminderMinutes,
+                                          ),
                                           style: theme.textTheme.bodySmall,
                                         ),
                                       ],
@@ -210,22 +215,22 @@ class TaskListPage extends StatelessWidget {
         return AlertDialog(
           title: Text(
             willComplete
-                ? 'Görev tamamlandı mı?'
-                : 'Görev tekrar aktif olsun mu?',
+                ? AppLocalizations.of(context)!.taskCompletedQuestion
+                : AppLocalizations.of(context)!.reactivateTaskQuestion,
           ),
           content: Text(
             willComplete
-                ? 'Bu görevi tamamlandı olarak işaretlemek istiyor musunuz?'
-                : 'Bu görevi tekrar aktif hale getirmek istiyor musunuz?',
+                ? AppLocalizations.of(context)!.markTaskCompletedConfirmation
+                : AppLocalizations.of(context)!.reactivateTaskConfirmation,
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context, false),
-              child: const Text('İptal'),
+              child: Text(AppLocalizations.of(context)!.cancel),
             ),
             ElevatedButton(
               onPressed: () => Navigator.pop(context, true),
-              child: const Text('Evet'),
+              child: Text(AppLocalizations.of(context)!.confirm),
             ),
           ],
         );
@@ -239,14 +244,14 @@ class TaskListPage extends StatelessWidget {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Görev silinsin mi?'),
-          content: const Text(
-            'Bu görevi kalıcı olarak silmek istiyor musunuz?',
+          title: Text(AppLocalizations.of(context)!.deleteTaskQuestion),
+          content: Text(
+            AppLocalizations.of(context)!.deleteTaskConfirmation,
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context, false),
-              child: const Text('İptal'),
+              child: Text(AppLocalizations.of(context)!.cancel),
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
@@ -254,7 +259,7 @@ class TaskListPage extends StatelessWidget {
                 foregroundColor: Colors.white,
               ),
               onPressed: () => Navigator.pop(context, true),
-              child: const Text('Sil'),
+              child: Text(AppLocalizations.of(context)!.delete),
             ),
           ],
         );

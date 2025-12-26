@@ -126,4 +126,102 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get registerSuccess => 'Registration successful!';
+
+  @override
+  String get noTaskForToday => 'No task has been added for today!';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get confirm => 'Confirm';
+
+  @override
+  String get delete => 'Delete';
+
+  @override
+  String get taskCompletedQuestion => 'Is the task completed?';
+
+  @override
+  String get reactivateTaskQuestion => 'Should the task be reactivated?';
+
+  @override
+  String get markTaskCompletedConfirmation =>
+      'Do you want to mark this task as completed?';
+
+  @override
+  String get reactivateTaskConfirmation =>
+      'Do you want to reactivate this task?';
+
+  @override
+  String get deleteTaskQuestion => 'Delete task?';
+
+  @override
+  String get deleteTaskConfirmation =>
+      'Do you want to permanently delete this task?';
+
+  @override
+  String get reminderAtTime => 'At time';
+
+  @override
+  String reminderMinutesBefore(Object minutes) {
+    return '$minutes min before';
+  }
+
+  @override
+  String get createTask => 'Create Task';
+
+  @override
+  String get selectDate => 'Select date';
+
+  @override
+  String get selectTime => 'Select time';
+
+  @override
+  String get voiceAnalysisCompleted => 'Voice analysis completed';
+
+  @override
+  String get taskName => 'Task Name';
+
+  @override
+  String get enterTitle => 'Enter title';
+
+  @override
+  String get details => 'Details';
+
+  @override
+  String get enterTaskDetails => 'Write task details';
+
+  @override
+  String get schedule => 'Schedule';
+
+  @override
+  String get reminder => 'Reminder';
+
+  @override
+  String get reminder5MinBefore => '5 min before';
+
+  @override
+  String get reminder15MinBefore => '15 min before';
+
+  @override
+  String get reminder30MinBefore => '30 min before';
+
+  @override
+  String get reminder1HourBefore => '1 hour before';
+
+  @override
+  String get fillRequiredFields => 'Please fill required fields';
+
+  @override
+  String get userNotAuthenticated => 'User not authenticated';
+
+  @override
+  String get notifications => 'Notifications';
+
+  @override
+  String get account => 'My Account';
+
+  @override
+  String get today => 'Today';
 }

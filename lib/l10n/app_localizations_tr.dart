@@ -102,7 +102,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get error_channel => 'Lütfen tüm alanları doldurun.';
 
   @override
-  String get logout => 'Logout';
+  String get logout => 'Çıkış Yap';
 
   @override
   String get loggedOut => 'Logged Out';
@@ -127,4 +127,102 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get registerSuccess => 'Kayıt başarılı!';
+
+  @override
+  String get noTaskForToday => 'Bugün için bir görev eklenmedi';
+
+  @override
+  String get cancel => 'İptal';
+
+  @override
+  String get confirm => 'Evet';
+
+  @override
+  String get delete => 'Sil';
+
+  @override
+  String get taskCompletedQuestion => 'Görev tamamlandı mı?';
+
+  @override
+  String get reactivateTaskQuestion => 'Görev tekrar aktif olsun mu?';
+
+  @override
+  String get markTaskCompletedConfirmation =>
+      'Bu görevi tamamlandı olarak işaretlemek istiyor musunuz?';
+
+  @override
+  String get reactivateTaskConfirmation =>
+      'Bu görevi tekrar aktif hale getirmek istiyor musunuz?';
+
+  @override
+  String get deleteTaskQuestion => 'Görev silinsin mi?';
+
+  @override
+  String get deleteTaskConfirmation =>
+      'Bu görevi kalıcı olarak silmek istiyor musunuz?';
+
+  @override
+  String get reminderAtTime => 'Zamanında';
+
+  @override
+  String reminderMinutesBefore(Object minutes) {
+    return '$minutes dk önce';
+  }
+
+  @override
+  String get createTask => 'Görev Oluştur';
+
+  @override
+  String get selectDate => 'Tarih Seç';
+
+  @override
+  String get selectTime => 'Saat Seç';
+
+  @override
+  String get voiceAnalysisCompleted => 'Ses analizi tamamlandı';
+
+  @override
+  String get taskName => 'Görev Adı';
+
+  @override
+  String get enterTitle => 'Başlık Giriniz';
+
+  @override
+  String get details => 'Detaylar';
+
+  @override
+  String get enterTaskDetails => 'Görev İçeriğini Yazınız';
+
+  @override
+  String get schedule => 'Zamanlama';
+
+  @override
+  String get reminder => 'Hatırlatıcı';
+
+  @override
+  String get reminder5MinBefore => '5 dk önce';
+
+  @override
+  String get reminder15MinBefore => '15 dk önce';
+
+  @override
+  String get reminder30MinBefore => '30 dk önce';
+
+  @override
+  String get reminder1HourBefore => '1 saat önce';
+
+  @override
+  String get fillRequiredFields => 'Lütfen gerekli alanları doldurun';
+
+  @override
+  String get userNotAuthenticated => 'Kullanıcı doğrulanamadı';
+
+  @override
+  String get notifications => 'Bildirimler';
+
+  @override
+  String get account => 'Hesabım';
+
+  @override
+  String get today => 'Bugün';
 }

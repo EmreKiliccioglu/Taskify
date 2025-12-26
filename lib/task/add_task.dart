@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:taskify/l10n/app_localizations.dart';
 import 'package:taskify/task/speech_parser.dart';
 import 'package:taskify/task/task_model.dart';
 import 'package:taskify/task/task_service.dart';
@@ -89,8 +90,8 @@ class _AddTaskPageState extends State<AddTaskPage> {
             });
 
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Ses analizi tamamlandı'),
+               SnackBar(
+                content: Text(AppLocalizations.of(context)!.voiceAnalysisCompleted),
                 duration: Duration(seconds: 2),
               ),
             );
@@ -124,7 +125,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Create Task'),
+        title: const Text('Taskify'),
         centerTitle: true,
       ),
       body: LayoutBuilder(
@@ -143,11 +144,11 @@ class _AddTaskPageState extends State<AddTaskPage> {
                     children: [
                       // TASK NAME
                       _Section(
-                        title: 'Task name',
+                        title: AppLocalizations.of(context)!.taskName,
                         child: TextField(
                           controller: _titleController,
-                          decoration: const InputDecoration(
-                            hintText: 'Başlık Giriniz',
+                          decoration: InputDecoration(
+                            hintText: AppLocalizations.of(context)!.enterTitle,
                             prefixIcon: Icon(Icons.edit),
                             border: OutlineInputBorder(
                               borderRadius:
@@ -159,7 +160,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
 
                       // DETAILS
                       _Section(
-                        title: 'Details',
+                        title: AppLocalizations.of(context)!.details,
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -168,8 +169,8 @@ class _AddTaskPageState extends State<AddTaskPage> {
                               child: TextField(
                                 controller: _descController,
                                 maxLines: 3,
-                                decoration: const InputDecoration(
-                                  hintText: 'Görev İçeriğini Yazınız',
+                                decoration: InputDecoration(
+                                  hintText: AppLocalizations.of(context)!.enterTaskDetails,
                                   prefixIcon: Icon(Icons.notes),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.all(Radius.circular(16)),
@@ -196,13 +197,13 @@ class _AddTaskPageState extends State<AddTaskPage> {
 
                       // DATE & TIME
                       _Section(
-                        title: 'Schedule',
+                        title: AppLocalizations.of(context)!.schedule,
                         child: Row(
                           children: [
                             _InfoButton(
                               icon: Icons.calendar_today,
                               label: _date == null
-                                  ? 'Select date'
+                                  ? AppLocalizations.of(context)!.selectDate
                                   : '${_date!.day}.${_date!.month}.${_date!.year}',
                               onTap: _pickDate,
                             ),
@@ -210,7 +211,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                             _InfoButton(
                               icon: Icons.access_time,
                               label: _time == null
-                                  ? 'Select time'
+                                  ? AppLocalizations.of(context)!.selectTime
                                   : _time!.format(context),
                               onTap: _pickTime,
                             ),
@@ -220,32 +221,32 @@ class _AddTaskPageState extends State<AddTaskPage> {
 
                       // REMINDER SELECTION
                       _Section(
-                        title: 'Reminder',
+                        title: AppLocalizations.of(context)!.reminder,
                         child: Wrap(
                           spacing: 8,
                           children: [
                             _ReminderButton(
-                              label: 'At time',
+                              label: AppLocalizations.of(context)!.reminderAtTime,
                               selected: _reminderMinutes == 0,
                               onTap: () => setState(() => _reminderMinutes = 0),
                             ),
                             _ReminderButton(
-                              label: '5 min before',
+                              label: AppLocalizations.of(context)!.reminder5MinBefore,
                               selected: _reminderMinutes == 5,
                               onTap: () => setState(() => _reminderMinutes = 5),
                             ),
                             _ReminderButton(
-                              label: '15 min before',
+                              label: AppLocalizations.of(context)!.reminder15MinBefore,
                               selected: _reminderMinutes == 15,
                               onTap: () => setState(() => _reminderMinutes = 15),
                             ),
                             _ReminderButton(
-                              label: '30 min before',
+                              label: AppLocalizations.of(context)!.reminder30MinBefore,
                               selected: _reminderMinutes == 30,
                               onTap: () => setState(() => _reminderMinutes = 30),
                             ),
                             _ReminderButton(
-                              label: '1 hour before',
+                              label: AppLocalizations.of(context)!.reminder1HourBefore,
                               selected: _reminderMinutes == 60,
                               onTap: () => setState(() => _reminderMinutes = 60),
                             ),
@@ -273,7 +274,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                                   _date == null ||
                                   _time == null) {
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text('Please fill required fields')),
+                                  SnackBar(content: Text(AppLocalizations.of(context)!.fillRequiredFields)),
                                 );
                                 return;
                               }
@@ -283,7 +284,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
 
                               if (user == null) {
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text('User not authenticated')),
+                                  SnackBar(content: Text(AppLocalizations.of(context)!.userNotAuthenticated)),
                                 );
                                 return;
                               }
@@ -317,14 +318,14 @@ class _AddTaskPageState extends State<AddTaskPage> {
                                 id: DateTime.now().millisecondsSinceEpoch ~/ 1000, // unique id
                                 title: 'Task Reminder',
                                 body: task.title,
-                                scheduledTime: tzScheduledTime, // burada tzScheduledTime kullan
+                                scheduledTime: tzScheduledTime,
                               );
 
                               Navigator.pop(context);
                             },
                             icon: const Icon(Icons.check_circle_outline),
-                            label: const Text(
-                              'Create Task',
+                            label: Text(
+                              AppLocalizations.of(context)!.createTask,
                               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                             ),
                             style: ElevatedButton.styleFrom(

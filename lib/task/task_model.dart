@@ -24,7 +24,6 @@ class Task {
     final data = doc.data() as Map<String, dynamic>;
     final timestamp = data['dueDate'] as Timestamp;
 
-    // Firestore UTC -> TZDateTime Europe/Istanbul
     final tzDueDate = tz.TZDateTime.from(timestamp.toDate(), tz.getLocation('Europe/Istanbul'));
 
     return Task(
@@ -43,7 +42,7 @@ class Task {
       'userId': userId,
       'title': title,
       'description': description,
-      'dueDate': dueDate.toUtc(), // Firestore UTC bekliyor
+      'dueDate': dueDate.toUtc(),
       'isCompleted': isCompleted,
       'reminderMinutes': reminderMinutes,
     };
